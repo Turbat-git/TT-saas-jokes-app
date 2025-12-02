@@ -29,7 +29,7 @@
                 @method('DELETE')
 
                 <x-primary-link-button
-                    href="{{ route('admin.categories.show', $category) }}"
+                    href="{{ route('admin.categories.index') }}"
                     class="hover:bg-sky-500 gap-4">
                     <i class="fa-solid fa-list pr-2"></i>
                     <span>All Categories</span>

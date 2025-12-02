@@ -17,7 +17,7 @@
             <dt class="w-1/6">Name</dt>
             <dd class="grow">{{ $category->title }}</dd>
             <dt class="w-1/6">Description</dt>
-            <dd class="grow min-w-2/3">{{ $category->description }}</dd>
+            <dd class="grow min-w-2/3">{!! $category->description !!}</dd>
         </dl>
 
         <footer>

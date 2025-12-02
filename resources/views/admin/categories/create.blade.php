@@ -20,7 +20,7 @@
             @method('POST')
             <div class="flex flex-col gap-4">
                 <x-input-label for="Title">Title</x-input-label>
-                <x-text-input name="title"
+                <x-textarea name="title"
                               id="Title"
                               type="text"
                               placeholder="Category Title"
@@ -29,7 +29,7 @@
                 <x-input-error :messages="$errors->get('title')" class="mt-2"/>
 
                 <x-input-label for="Description">Description</x-input-label>
-                <x-text-input name="description"
+                <x-textarea name="description"
                               id="Description"
                               type="text"
                               placeholder="Category Description"
@@ -39,13 +39,6 @@
             </div>
 
             <footer class="mt-6">
-                <x-primary-link-button
-                    href="{{ route('admin.categories.index') }}"
-                    class="hover:bg-sky-500 gap-4">
-                    <i class="fa-solid fa-list pr-2"></i>
-                    <span>All Categories</span>
-                </x-primary-link-button>
-
                 <x-primary-button
                     class="hover:bg-green-500 gap-4">
                     <i class="fa-solid fa-plus pr-2"></i>

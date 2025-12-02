@@ -33,7 +33,7 @@
             @forelse($categories as $category)
                 <tr class="odd:bg-gray-100">
                     <td class="p-2">{{ $category->title }}</td>
-                    <td class="p-2">{{ $category->description }}</td>
+                    <td class="p-2">{!! Str::of($category->description??"")->stripTags() !!}</td>
                     <td class="p-2 flex gap-4">
                         <x-primary-link-button
                             href="{{ route('admin.categories.show', $category) }}"
