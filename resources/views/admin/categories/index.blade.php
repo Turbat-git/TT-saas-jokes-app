@@ -11,6 +11,14 @@
             <h3 class="text-2xl font-bold text-zinc-700">
                 {{__('Categories')}}
             </h3>
+
+            <x-primary-link-button
+                href="{{ route('admin.categories.create') }}"
+                class="hover:bg-green-500 text-white flex items-center gap-2 mt-6"
+            >
+                <i class="fa-solid fa-plus"></i>
+                <span>Add Category</span>
+            </x-primary-link-button>
         </header>
 
         <table class="table w-full bg-white border">

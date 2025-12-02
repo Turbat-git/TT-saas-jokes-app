@@ -35,7 +35,21 @@ class CategoryManagementController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'title' => [
+                'required',
+                'min:3',
+                'max:64',
+                Rule::unique('categories', 'title')
+            ],
+            'description' => [
+                'nullable',
+                'max:255',
+            ]
+        ]);
+
+        Category::create($validated);
+        return to_route('admin.categories.index');
     }
 
     /**

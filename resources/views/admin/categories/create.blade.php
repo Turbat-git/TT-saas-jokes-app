@@ -9,22 +9,21 @@
 
         <header>
             <h3 class="text-2xl font-bold text-zinc-700">
-                {{__('Categories')}}: {{ __('Edit') }}
+                {{__('Categories')}}: {{ __('Create') }}
             </h3>
         </header>
 
-        <form action="{{ route('admin.categories.update', $category) }}"
+        <form action="{{ route('admin.categories.store') }}"
               method="POST">
 
             @csrf
-            @method('PUT')
+            @method('POST')
             <div class="flex flex-col gap-4">
                 <x-input-label for="Title">Title</x-input-label>
                 <x-text-input name="title"
                               id="Title"
                               type="text"
                               placeholder="Category Title"
-                              :value="old('title') ?? $category->title"
                               required autofocus
                               autocomplete="title"/>
                 <x-input-error :messages="$errors->get('title')" class="mt-2"/>
@@ -34,7 +33,6 @@
                               id="Description"
                               type="text"
                               placeholder="Category Description"
-                              :value="old('title') ?? $category->description"
                               required autofocus
                               autocomplete="description"/>
                 <x-input-error :messages="$errors->get('description')" class="mt-2"/>
@@ -50,7 +48,7 @@
 
                 <x-primary-button
                     class="hover:bg-green-500 gap-4">
-                    <i class="fa-solid fa-save pr-2"></i>
+                    <i class="fa-solid fa-plus pr-2"></i>
                     <span>Save</span>
                 </x-primary-button>
 
