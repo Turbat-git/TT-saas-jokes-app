@@ -49,7 +49,7 @@
                 <x-primary-button
                     class="hover:bg-green-500 gap-4">
                     <i class="fa-solid fa-plus pr-2"></i>
-                    <span>Save</span>
+                    <span>Add</span>
                 </x-primary-button>
 
                 <x-secondary-link-button
