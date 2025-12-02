@@ -10,6 +10,14 @@
             <h3 class="text-2xl font-bold text-zinc-700">
                 Users
             </h3>
+
+            <x-primary-link-button
+                href="{{ route('admin.users.create') }}"
+                class="hover:bg-green-500 text-white flex items-center gap-2 mt-6"
+            >
+                <i class="fa-solid fa-plus"></i>
+                <span>Add User</span>
+            </x-primary-link-button>
         </header>
         <div class="flex flex-1 w-full max-h-min overflow-x-auto">
             <table class="min-w-full divide-y-2 divide-gray-200 bg-gray-50">
@@ -39,24 +47,25 @@
                             Suspended
                         </td>
                         <td class="px-3 py-1 whitespace-nowrap w-1/8">
-                            <form action="{{ route('admin.users', $user) }}"
+                            <form action="{{ route('admin.users.index', $user) }}"
                                   method="post"
                             class="grid grid-cols-3 gap-2 w-full">
                                 @csrf
                                 @method('delete')
 
-                                <a href="{{ route('admin.users', $user) }}"
+                                <a href="{{ route('admin.users.show', $user) }}"
                                    class="hover:text-green-500 transition border p-2 text-center rounded">
                                     <i class="fa-solid fa-user-tag"></i>
                                 </a>
 
-                                <a href="{{ route('admin.users', $user) }}"
+                                <a href="{{ route('admin.users.edit', $user) }}"
                                    class="hover:text-blue-500 transition border p-2 text-center rounded">
                                     <i class="fa-solid fa-user-cog"></i>
                                 </a>
-                                <button type="submit" class="hover:text-red-500 transition border p-2 text-center rounded">
+                                <a href="{{ route('admin.users.delete', $user) }}"
+                                   class="hover:text-red-500 transition border p-2 text-center rounded">
                                     <i class="fa-solid fa-user-slash"></i>
-                                </button>
+                                </a>
                             </form>
                         </td>
                     </tr>

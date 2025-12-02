@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CategoryManagementController;
+use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StaticPageController;
@@ -35,12 +36,11 @@ Route::middleware(['auth', 'verified'])
         Route::get('/', [AdminController::class, 'index'])
             ->name('index');
 
-        Route::get('users', [AdminController::class, 'users'])->name('users');
-
-        Route::get('categories', [AdminController::class, 'categories'])->name('categories');
-
         Route::get('categories/{category}/delete', [CategoryManagementController::class, 'delete'])
             ->name('categories.delete');
+
+        Route::get('users/{user}/delete', [UserManagementController::class, 'delete'])
+            ->name('users.delete');
 
         /**
          * Creates the routes:
@@ -53,6 +53,7 @@ Route::middleware(['auth', 'verified'])
          *      admin.categories.destroy
          */
         Route::resource('categories', CategoryManagementController::class);
+        Route::resource('users', UserManagementController::class);
 
     });
 
