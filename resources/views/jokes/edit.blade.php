@@ -9,41 +9,52 @@
 
         <header>
             <h3 class="text-2xl font-bold text-zinc-700">
-                {{__('Joke')}}: {{ __('Edit') }}
+                {{__('Jokes')}}: {{ __('Create') }}
             </h3>
         </header>
 
-        <form action="{{ route('jokes.update', $joke) }}"
+        <form action="{{ route('jokes.store') }}"
               method="POST">
 
             @csrf
-            @method('PUT')
+
             <div class="flex flex-col gap-4">
                 <x-input-label for="Title">Title</x-input-label>
-                <x-textarea name="title"
-                            id="Title"
-                            type="text"
-                            :message="old('title', $joke->title)"
-                            placeholder="Category Title"
-                            required autofocus
-                            autocomplete="title"/>
+                <x-text-input name="title"
+                              id="Title"
+                              placeholder="Joke Title"
+                              autofocus
+                              value="{{old('title') ?? $joke->title}}"
+                              autocomplete="title"/>
                 <x-input-error :messages="$errors->get('title')" class="mt-2"/>
 
                 <x-input-label for="Content">Content</x-input-label>
                 <x-textarea name="content"
                             id="Content"
-                            :message="old('content', $joke->content)"
                             placeholder="Joke Content"
-                            required autofocus
-                            autocomplete="content"/>
+                >{{ old('content') ?? $joke->content }}</x-textarea>
                 <x-input-error :messages="$errors->get('content')" class="mt-2"/>
+
+                <x-input-label for="categories">Categories</x-input-label>
+
+                <select name="categories[]" id="categories" multiple
+                        class="border-gray-300 rounded-md shadow-sm w-full">
+                    @foreach($categories as $category)
+                        <option value="{{ $category->id }}">
+                            {{ $category->title }}
+                        </option>
+                    @endforeach
+                </select>
+
+                <x-input-error :messages="$errors->get('categories')" class="mt-2"/>
             </div>
 
             <footer class="mt-6">
                 <x-primary-button
-                    class="hover:bg-green-500 gap-4">
-                    <i class="fa-solid fa-save pr-2"></i>
-                    <span>Save</span>
+                    name="save"
+                    class="hover:bg-green-500 gap-4" type="submit">
+                    <i class="fa-solid fa-plus pr-2"></i>
+                    <span>Add</span>
                 </x-primary-button>
 
                 <x-secondary-link-button

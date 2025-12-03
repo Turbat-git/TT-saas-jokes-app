@@ -27,6 +27,7 @@
                 <th class="p-2">Title</th>
                 <th class="p-2">User ID</th>
                 <th class="p-2">Content</th>
+                <th class="p-2">Categories</th>
                 <th class="p-2">Actions</th>
             </tr>
             </thead>
@@ -36,6 +37,12 @@
                     <td class="p-2">{{ $joke->title }}</td>
                     <td class="p-2">{{ $joke->user_id }}</td>
                     <td class="p-2">{!! Str::of($joke->content??"")->stripTags() !!}</td>
+                    <td class="p-2">
+                        @foreach($joke->categories as $category)
+                            <span class="px-2 py-1 bg-gray-200 rounded text-sm">{{ $category->title }}</span>
+                        @endforeach
+                    </td>
+
                     <td class="p-2 flex gap-4">
                         <x-primary-link-button
                             href="{{ route('jokes.show', $joke) }}"

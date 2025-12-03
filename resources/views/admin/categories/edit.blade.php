@@ -20,13 +20,11 @@
             @method('PUT')
             <div class="flex flex-col gap-4">
                 <x-input-label for="Title">Title</x-input-label>
-                <x-textarea name="title"
+                <x-text-input name="title"
                               id="Title"
                               type="text"
                               placeholder="Category Title"
-                              :message="old('title', $category->title)"
-                              required autofocus
-                              autocomplete="title"/>
+                              value="{{old('title') ?? $category->title}}"/>
                 <x-input-error :messages="$errors->get('title')" class="mt-2"/>
 
                 <x-input-label for="Description">Description</x-input-label>
@@ -34,8 +32,7 @@
                               id="Description"
                               placeholder="Category Description"
                               :message="old('description') ?? $category->description"
-                              required autofocus
-                              autocomplete="description"/>
+                >{{ old('content') ?? $category->description }}</x-textarea>
                 <x-input-error :messages="$errors->get('description')" class="mt-2"/>
             </div>
 

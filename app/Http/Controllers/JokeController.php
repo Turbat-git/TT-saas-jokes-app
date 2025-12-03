@@ -9,6 +9,7 @@ use App\Http\Requests\UpdateJokeRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Builder;
 
 class JokeController extends Controller
 {
@@ -17,6 +18,18 @@ class JokeController extends Controller
      */
     public function index()
     {
+        $jokes = Joke::with('userVotes')
+            ->withCount([
+                'votes as likesCount'
+                => fn (Builder $query)
+                => $query->where('vote', '>', 0)], 'vote')
+            ->withCount([
+                'votes as dislikesCount'
+                => fn (Builder $query)
+                => $query->where('vote', '<', 0)], 'vote')
+            ->latest()
+            ->paginate();
+
         $query = Joke::query();
 
         // Search
@@ -55,12 +68,14 @@ class JokeController extends Controller
             'categories.*' => ['exists:categories,id'],
         ]);
 
+        $categories = $validated['categories'];
+        unset($validated['categories']);
+
         $validated['user_id'] = Auth::id();
 
         $joke = Joke::create($validated);
 
-        // Attach selected categories
-        $joke->categories()->attach($validated['categories']);
+        $joke->categories()->sync($categories);
 
         return to_route('jokes.index');
     }
@@ -79,8 +94,11 @@ class JokeController extends Controller
      */
     public function edit(Joke $joke)
     {
+        $categories = Category::all();
+
         return view('jokes.edit')
-            ->with('joke', $joke);
+            ->with('joke', $joke)
+            ->with('categories', $categories);
     }
 
     /**

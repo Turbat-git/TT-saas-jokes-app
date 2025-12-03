@@ -22,7 +22,11 @@
 
             <div class="flex">
                 <dt class="w-1/4 font-semibold">Tags:</dt>
-                <dd class="w-3/4">{{ $joke->title }}</dd>
+                <dd class="w-3/4">
+                    @foreach($joke->categories as $category)
+                        <span class="px-2 py-1 bg-gray-200 rounded text-sm">{{ $category->title }}</span>
+                    @endforeach
+                </dd>
             </div>
 
             <div class="flex">
@@ -38,18 +42,23 @@
                 <i class="fa-solid fa-list pr-2"></i>
                 <span>All Jokes</span>
             </x-primary-link-button>
-            <x-primary-link-button
-                href="{{ route('jokes.index') }}"
-                class="hover:bg-green-500 gap-4">
-                <i class="fa-solid fa-edit pr-2"></i>
-                <span>Edit</span>
-            </x-primary-link-button>
-            <x-secondary-link-button
-                href="{{ route('jokes.index') }}"
-                class="bg-red-100 hover:bg-red-500 text-gray-500! hover:text-white! gap-4">
-                <i class="fa-solid fa-trash pr-2"></i>
-                <span>Delete</span>
-            </x-secondary-link-button>
+            @if(auth()->id() === $joke->user_id)
+                <x-primary-link-button
+                    href="{{ route('jokes.index') }}"
+                    class="hover:bg-green-500 gap-4">
+                    <i class="fa-solid fa-edit pr-2"></i>
+                    <span>Edit</span>
+                </x-primary-link-button>
+                <x-secondary-link-button
+                    href="{{ route('jokes.index') }}"
+                    class="bg-red-100 hover:bg-red-500 text-gray-500! hover:text-white! gap-4">
+                    <i class="fa-solid fa-trash pr-2"></i>
+                    <span>Delete</span>
+                </x-secondary-link-button>
+            @endif
+            <div class="text-right">
+                @livewire('like-dislike', [$joke])
+            </div>
         </footer>
     </section>
 

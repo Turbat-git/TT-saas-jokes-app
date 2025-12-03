@@ -17,13 +17,14 @@
               method="POST">
 
             @csrf
-            @method('POST')
+
             <div class="flex flex-col gap-4">
                 <x-input-label for="Title">Title</x-input-label>
-                <x-textarea name="title"
+                <x-text-input name="title"
                             id="Title"
                             placeholder="Joke Title"
-                            required autofocus
+                            autofocus
+                            value="{{old('title') ??''}}"
                             autocomplete="title"/>
                 <x-input-error :messages="$errors->get('title')" class="mt-2"/>
 
@@ -31,8 +32,7 @@
                 <x-textarea name="content"
                             id="Content"
                             placeholder="Joke Content"
-                            required autofocus
-                            autocomplete="content"/>
+                            >{{ old('content') ??"" }}</x-textarea>
                 <x-input-error :messages="$errors->get('content')" class="mt-2"/>
 
                 <x-input-label for="categories">Categories</x-input-label>
@@ -51,6 +51,7 @@
 
             <footer class="mt-6">
                 <x-primary-button
+                    name="save"
                     class="hover:bg-green-500 gap-4" type="submit">
                     <i class="fa-solid fa-plus pr-2"></i>
                     <span>Add</span>

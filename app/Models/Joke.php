@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Joke extends Model
 {
@@ -28,5 +30,17 @@ class Joke extends Model
         return $this->belongsToMany(Category::class)
             ->using(CategoryJoke::class)
             ->withTimestamps();
+    }
+
+    public function votes(): HasMany
+    {
+        return $this->hasMany(Vote::class);
+    }
+
+    public function userVotes(): HasOne
+    {
+        return $this->votes()
+            ->one()
+            ->where('user_id', auth()->id());
     }
 }

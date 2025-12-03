@@ -25,22 +25,18 @@
                 </div>
 
                 <x-input-label for="Name">User's Name</x-input-label>
-                <x-textarea name="name"
+                <x-text-input name="name"
                             id="Name"
                             type="text"
                             placeholder="User's Name"
-                            :message="old('name') ?? $user->name"
-                            required autofocus
-                            autocomplete="name"/>
+                            value="{{old('name') ?? $user->name}}"/>
                 <x-input-error :messages="$errors->get('name')" class="mt-2"/>
 
                 <x-input-label for="Email">Email</x-input-label>
                 <x-textarea name="email"
                             id="Email"
                             placeholder="User Email"
-                            :message="old('email') ?? $user->email"
-                            required autofocus
-                            autocomplete="email"/>
+                            >{{ old('email') ?? $user->email }}</x-textarea>
                 <x-input-error :messages="$errors->get('email')" class="mt-2"/>
 
                 <div class="flex">
