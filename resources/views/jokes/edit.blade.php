@@ -9,23 +9,21 @@
 
         <header>
             <h3 class="text-2xl font-bold text-zinc-700">
-                {{__('Jokes')}}: {{ __('Create') }}
+                {{__('Jokes')}}: {{ __('Edit') }}
             </h3>
         </header>
 
-        <form action="{{ route('jokes.store') }}"
+        <form action="{{ route('jokes.update', $joke) }}"
               method="POST">
 
             @csrf
-
+            @method('PUT')
             <div class="flex flex-col gap-4">
                 <x-input-label for="Title">Title</x-input-label>
                 <x-text-input name="title"
                               id="Title"
                               placeholder="Joke Title"
-                              autofocus
-                              value="{{old('title') ?? $joke->title}}"
-                              autocomplete="title"/>
+                              value="{{old('title') ?? $joke->title}}"/>
                 <x-input-error :messages="$errors->get('title')" class="mt-2"/>
 
                 <x-input-label for="Content">Content</x-input-label>
@@ -52,9 +50,9 @@
             <footer class="mt-6">
                 <x-primary-button
                     name="save"
-                    class="hover:bg-green-500 gap-4" type="submit">
+                    class="hover:bg-green-500 gap-4">
                     <i class="fa-solid fa-plus pr-2"></i>
-                    <span>Add</span>
+                    <span>Save</span>
                 </x-primary-button>
 
                 <x-secondary-link-button

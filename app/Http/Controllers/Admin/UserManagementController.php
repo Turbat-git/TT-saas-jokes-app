@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class UserManagementController extends Controller
@@ -34,25 +36,44 @@ class UserManagementController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => [
-                'required',
-                'min:3',
-                'max:64'
-            ],
-            'email' => [
-                'required',
-                'email',
-            ],
-            'password' => [
-                'required',
-                'min:8',
-                'max:16',
-                'confirmed'
-            ]
-        ]);
+        try{
+            $validated = $request->validate([
+                'name' => [
+                    'required',
+                    'min:3',
+                    'max:64'
+                ],
+                'email' => [
+                    'required',
+                    'email',
+                ],
+                'password' => [
+                    'required',
+                    'min:8',
+                    'max:16',
+                    'confirmed'
+                ]
+            ]);
 
-        User::create($validated);
+            $user = User::create($validated);
+        } catch (ValidationException $e) {
+            flash()->error('Please fix the errors in the form.',
+                [
+                    'position' => 'top-center',
+                    'timeout' => 5000,
+                ],
+                'User Creation Failed');
+
+            return back()->withErrors($e->validator)->withInput();
+        }
+
+
+        $userName = $user->name;
+
+        flash()
+            ->option('position', 'top-center')
+            ->option('timeout', 5000)
+            ->success("User $userName created successfully!");
 
         return to_route('admin.users.index');
     }
@@ -80,21 +101,39 @@ class UserManagementController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        $oldUser = $user;
+        try{
+            $oldUser = $user;
 
-        $validated = $request->validate([
-            'name' => [
-                'required',
-                'max:64',
-            ],
-            'email' => [
-                'required',
-                'email',
-                Rule::unique('users','email')->ignore($user)
-            ]
-        ]);
+            $validated = $request->validate([
+                'name' => [
+                    'required',
+                    'max:64',
+                ],
+                'email' => [
+                    'required',
+                    'email',
+                    Rule::unique('users','email')->ignore($user)
+                ]
+            ]);
 
-        $user->update($validated);
+            $user->update($validated);
+
+        } catch (ValidationException $e) {
+            flash()->error('Please fix the errors in the form.',
+                [
+                    'position' => 'top-center',
+                    'timeout' => 5000,
+                ],
+                'User Edit Failed');
+
+            return back()->withErrors($e->validator)->withInput();
+        }
+
+        flash()
+            ->option('position', 'top-center')
+            ->option('timeout', 5000)
+            ->success("User edited successfully!");
+
         return to_route('admin.users.index');
     }
 
@@ -109,9 +148,26 @@ class UserManagementController extends Controller
      */
     public function destroy(User $user)
     {
-        $oldUser = $user;
+        try{
+            $oldUser = $user;
 
-        $user->delete();
+            $user->delete();
+
+        } catch (QueryException $e){
+            flash()->error('Could not delete user.',
+                [
+                    'position' => 'top-center',
+                    'timeout' => 5000,
+                ],
+                'User Deletion Failed');
+
+            return back();
+        }
+
+        flash()
+            ->option('position', 'top-center')
+            ->option('timeout', 5000)
+            ->success("User deleted successfully!");
 
         return to_route('admin.users.index');
     }

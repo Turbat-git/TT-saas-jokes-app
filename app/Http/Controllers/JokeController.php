@@ -6,10 +6,13 @@ use App\Models\Category;
 use App\Models\Joke;
 use App\Http\Requests\StoreJokeRequest;
 use App\Http\Requests\UpdateJokeRequest;
+use Illuminate\Database\QueryException;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Validation\ValidationException;
 
 class JokeController extends Controller
 {
@@ -18,6 +21,10 @@ class JokeController extends Controller
      */
     public function index()
     {
+
+        $query = Joke::query();
+
+
         $jokes = Joke::with('userVotes')
             ->withCount([
                 'votes as likesCount'
@@ -27,10 +34,9 @@ class JokeController extends Controller
                 'votes as dislikesCount'
                 => fn (Builder $query)
                 => $query->where('vote', '<', 0)], 'vote')
+            ->with('categories')
             ->latest()
             ->paginate();
-
-        $query = Joke::query();
 
         // Search
         if (request()->has('search')) {
@@ -38,8 +44,6 @@ class JokeController extends Controller
             $query->where('title', 'like', "%$search%")
                 ->orWhere('content', 'like', "%$search%");
         }
-
-        $jokes = $query->with('categories')->paginate(10);
 
         return view('jokes.index')
             ->with('jokes', $jokes);
@@ -61,21 +65,40 @@ class JokeController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'title' => ['required','min:3','max:64'],
-            'content' => ['required','min:3','max:255'],
-            'categories' => ['required', 'array'],
-            'categories.*' => ['exists:categories,id'],
-        ]);
+        try{
+            $validated = $request->validate([
+                'title' => ['required','min:3','max:64'],
+                'content' => ['required','min:3','max:255'],
+                'categories' => ['required', 'array'],
+                'categories.*' => ['exists:categories,id'],
+            ]);
 
-        $categories = $validated['categories'];
-        unset($validated['categories']);
+            $categories = $validated['categories'];
+            unset($validated['categories']);
 
-        $validated['user_id'] = Auth::id();
+            $validated['user_id'] = Auth::id();
 
-        $joke = Joke::create($validated);
+            $joke = Joke::create($validated);
 
-        $joke->categories()->sync($categories);
+            $joke->categories()->sync($categories);
+
+        } catch (ValidationException $e){
+            flash()->error('Please fix the errors in the form.',
+                [
+                    'position' => 'top-center',
+                    'timeout' => 5000,
+                ],
+                'Joke Creation Failed');
+
+            return back()->withErrors($e->validator)->withInput();
+        }
+
+        $jokeName = $joke->title;
+
+        flash()
+            ->option('position', 'top-center')
+            ->option('timeout', 5000)
+            ->success("$jokeName created successfully!");
 
         return to_route('jokes.index');
     }
@@ -103,26 +126,57 @@ class JokeController extends Controller
 
     /**
      * Update the specified resource in storage.
+     *
+     *
+     * @param Request $request
+     * @param Joke $joke
+     * @return RedirectResponse
      */
-    public function update(Request $request, Joke $joke)
+    public function update(Request $request, Joke $joke): RedirectResponse
     {
-        $oldJoke = $joke;
+        try{
+            $oldJoke = $joke;
 
-        $validated = $request->validate([
-            'title' => [
-                'required',
-                'min:3',
-                'max:64',
-                Rule::unique('jokes','title')->ignore($joke)
-            ],
-            'content' => [
-                'required',
-                'max:255',
-            ]
-        ]);
+            $validated = $request->validate([
+                'title' => [
+                    'required',
+                    'min:3',
+                    'max:64',
+                    Rule::unique('jokes','title')->ignore($joke)
+                ],
+                'content' => [
+                    'required',
+                    'max:255',
+                ],
+                'categories' => [
+                    'required',
+                    'array'
+                ],
+                'categories.*' => [
+                    'integer',
+                    'exists:categories,id'
+                ],
+            ]);
 
-        $joke->update($validated);
-        $joke->categories()->sync($validated['categories']);
+            $joke->update($validated);
+            $joke->categories()->sync($validated['categories']);
+        } catch (ValidationException $e) {
+            flash()->error('Please fix the errors in the form.',
+                [
+                    'position' => 'top-center',
+                    'timeout' => 5000,
+                ],
+                'Joke Update Failed');
+
+            return back()->withErrors($e->validator)->withInput();
+        }
+
+        $jokeName = $joke->title;
+
+        flash()
+            ->option('position', 'top-center')
+            ->option('timeout', 5000)
+            ->success("$jokeName updated successfully!");
 
         return to_route('jokes.index');
     }
@@ -138,9 +192,25 @@ class JokeController extends Controller
      */
     public function destroy(Joke $joke)
     {
-        $oldJoke = $joke;
+        try {
+            $oldJoke = $joke;
 
-        $joke->delete();
+            $joke->delete();
+        } catch (QueryException $e) {
+            flash()->error('Could not delete joke.',
+                [
+                    'position' => 'top-center',
+                    'timeout' => 5000,
+                ],
+                'Joke Deletion Failed');
+        }
+
+        $jokeName = $oldJoke->title;
+
+        flash()
+            ->option('position', 'top-center')
+            ->option('timeout', 5000)
+            ->success("$jokeName deleted successfully!");
 
         return to_route('jokes.index');
     }

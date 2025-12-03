@@ -30,6 +30,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('jokes/{joke}/delete', [JokeController::class, 'delete'])
         ->name('jokes.delete');
 
+//    Route::post('jokes/{joke}/update', [JokeController::class, 'update'])
+//        ->name('jokes.update');
+
     Route::resource('jokes', JokeController::class);
 });
 

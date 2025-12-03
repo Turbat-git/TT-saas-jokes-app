@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class CategoryManagementController extends Controller
@@ -37,20 +39,39 @@ class CategoryManagementController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'title' => [
-                'required',
-                'min:3',
-                'max:64',
-                Rule::unique('categories', 'title')
-            ],
-            'description' => [
-                'nullable',
-                'max:255',
-            ]
-        ]);
+        try{
+            $validated = $request->validate([
+                'title' => [
+                    'required',
+                    'min:3',
+                    'max:64',
+                    Rule::unique('categories', 'title')
+                ],
+                'description' => [
+                    'nullable',
+                    'max:255',
+                ]
+            ]);
 
-        Category::create($validated);
+            $category = Category::create($validated);
+
+        } catch (ValidationException $e) {
+            flash()->error('Please fix the errors in the form.',
+                [
+                    'position' => 'top-center',
+                    'timeout' => 5000,
+                ],
+                'Category Creation Failed');
+
+            return back()->withErrors($e->validator)->withInput();
+        }
+
+        $categoryName = $category->title;
+
+        flash()
+            ->option('position', 'top-center')
+            ->option('timeout', 5000)
+            ->success("Category $categoryName created successfully!");
         return to_route('admin.categories.index');
     }
 
@@ -77,22 +98,42 @@ class CategoryManagementController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        $oldCategory = $category;
+        try{
+            $oldCategory = $category;
 
-        $validated = $request->validate([
-            'title' => [
-                'required',
-                'min:3',
-                'max:64',
-                Rule::unique('categories','title')->ignore($category)
-            ],
-            'description' => [
-                'nullable',
-                'max:255',
-            ]
-        ]);
+            $validated = $request->validate([
+                'title' => [
+                    'required',
+                    'min:3',
+                    'max:64',
+                    Rule::unique('categories','title')->ignore($category)
+                ],
+                'description' => [
+                    'nullable',
+                    'max:255',
+                ]
+            ]);
 
-        $category->update($validated);
+            $category->update($validated);
+
+        } catch (ValidationException $e) {
+            flash()->error('Please fix the errors in the form.',
+                [
+                    'position' => 'top-center',
+                    'timeout' => 5000,
+                ],
+                'Category Update Failed');
+
+            return back()->withErrors($e->validator)->withInput();
+        }
+
+        $categoryName = $category->title;
+
+        flash()
+            ->option('position', 'top-center')
+            ->option('timeout', 5000)
+            ->success("Category $categoryName updated successfully!");
+
         return to_route('admin.categories.index');
     }
 
@@ -110,9 +151,27 @@ class CategoryManagementController extends Controller
      */
     public function destroy(Category $category): RedirectResponse
     {
-        $oldCategory = $category;
+        try{
+            $oldCategory = $category;
 
-        $category->delete();
+            $category->delete();
+        } catch (QueryException $e) {
+            flash()->error('Could not delete category.',
+                [
+                    'position' => 'top-center',
+                    'timeout' => 5000,
+                ],
+                'Category Deletion Failed');
+
+            return back();
+        }
+
+        $categoryName = $oldCategory->title;
+
+        flash()
+            ->option('position', 'top-center')
+            ->option('timeout', 5000)
+            ->success("Category $categoryName updated successfully!");
 
         return to_route('admin.categories.index');
     }
