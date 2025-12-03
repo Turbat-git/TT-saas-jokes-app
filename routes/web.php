@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CategoryManagementController;
+use App\Http\Controllers\Admin\PermissionManagementController;
+use App\Http\Controllers\Admin\RoleManagementController;
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\JokeController;
 use App\Http\Controllers\DashboardController;
@@ -63,6 +65,25 @@ Route::middleware(['auth', 'verified'])
          */
         Route::resource('categories', CategoryManagementController::class);
         Route::resource('users', UserManagementController::class);
+
+        Route::middleware(['auth', 'verified', 'role:admin'])
+            ->group(function () {
+
+                Route::resource('roles', RoleManagementController::class);
+
+                Route::resource('permissions', PermissionManagementController::class);
+
+                Route::post('/roles/{role}/permissions',
+                    [RoleManagementController::class, 'givePermission'])
+                    ->name('roles.permissions');
+
+                Route::delete('/roles/{role}/permissions/{permission}',
+                    [RoleManagementController::class, 'revokePermission'])
+                    ->name('roles.permissions.revoke');
+
+                Route::get('roles/{role}/delete', [RoleManagementController::class, 'delete'])
+                    ->name('roles.delete');
+            });
 
     });
 

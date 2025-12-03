@@ -9,13 +9,15 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
+use \Illuminate\Http\RedirectResponse;
 
 class UserManagementController extends Controller
 {
     /**
      * Display a listing of the resource.
+     * @return View
      */
-    public function index()
+    public function index(): View
     {
         $users = User::paginate(10);
 
@@ -25,16 +27,19 @@ class UserManagementController extends Controller
 
     /**
      * Show the form for creating a new resource.
+     * @return View
      */
-    public function create()
+    public function create(): View
     {
         return view('admin.users.create');
     }
 
     /**
      * Store a newly created resource in storage.
+     * @param Request $request
+     * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         try{
             $validated = $request->validate([
@@ -89,8 +94,10 @@ class UserManagementController extends Controller
 
     /**
      * Show the form for editing the specified resource.
+     * @param User $user
+     * @return View
      */
-    public function edit(User $user)
+    public function edit(User $user): View
     {
         return view('admin.users.edit')
             ->with('user', $user);
@@ -98,8 +105,11 @@ class UserManagementController extends Controller
 
     /**
      * Update the specified resource in storage.
+     * @param Request $request
+     * @param User $user
+     * @return RedirectResponse
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request, User $user): RedirectResponse
     {
         try{
             $oldUser = $user;
@@ -145,8 +155,10 @@ class UserManagementController extends Controller
 
     /**
      * Remove the specified resource from storage.
+     * @param User $user
+     * @return RedirectResponse
      */
-    public function destroy(User $user)
+    public function destroy(User $user): RedirectResponse
     {
         try{
             $oldUser = $user;

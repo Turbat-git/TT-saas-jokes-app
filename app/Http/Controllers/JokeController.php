@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Joke;
-use App\Http\Requests\StoreJokeRequest;
-use App\Http\Requests\UpdateJokeRequest;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Validation\Rule;
@@ -13,13 +11,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Validation\ValidationException;
+use Illuminate\View\View;
 
 class JokeController extends Controller
 {
     /**
      * Display a listing of the resource.
+     * @return View
      */
-    public function index()
+    public function index(): View
     {
 
         $query = Joke::query();
@@ -51,8 +51,9 @@ class JokeController extends Controller
 
     /**
      * Show the form for creating a new resource.
+     * @return View
      */
-    public function create()
+    public function create():View
     {
         $categories = Category::all();
 
@@ -62,8 +63,10 @@ class JokeController extends Controller
 
     /**
      * Store a newly created resource in storage.
+     * @param Request $request
+     * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         try{
             $validated = $request->validate([
@@ -105,8 +108,10 @@ class JokeController extends Controller
 
     /**
      * Display the specified resource.
+     * @param Joke $joke
+     * @return View
      */
-    public function show(Joke $joke)
+    public function show(Joke $joke): View
     {
         return view('jokes.show')
             ->with('joke', $joke);
@@ -114,8 +119,10 @@ class JokeController extends Controller
 
     /**
      * Show the form for editing the specified resource.
+     * @param Joke $joke
+     * @return View
      */
-    public function edit(Joke $joke)
+    public function edit(Joke $joke): View
     {
         $categories = Category::all();
 
@@ -181,7 +188,11 @@ class JokeController extends Controller
         return to_route('jokes.index');
     }
 
-    public function delete(Joke $joke)
+    /**
+     * @param Joke $joke
+     * @return View
+     */
+    public function delete(Joke $joke):View
     {
         return view('jokes.delete')
             ->with('joke', $joke);
@@ -189,8 +200,10 @@ class JokeController extends Controller
 
     /**
      * Remove the specified resource from storage.
+     * @param Joke $joke
+     * @return RedirectResponse
      */
-    public function destroy(Joke $joke)
+    public function destroy(Joke $joke): RedirectResponse
     {
         try {
             $oldJoke = $joke;
@@ -202,7 +215,7 @@ class JokeController extends Controller
                     'position' => 'top-center',
                     'timeout' => 5000,
                 ],
-                'Joke Deletion Failed');
+                'Joke Deletion Failed. ');
         }
 
         $jokeName = $oldJoke->title;

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Joke;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -11,7 +12,11 @@ class DashboardController extends Controller
     {
         $user = auth()->user();
 
-        return view('static.dashboard')
-            ->with('user', $user);
+        $jokesCount = Joke::where('user_id', $user->id)->count();
+
+        return view('static.dashboard', [
+            'user' => $user,
+            'jokesCount' => $jokesCount
+        ]);
     }
 }

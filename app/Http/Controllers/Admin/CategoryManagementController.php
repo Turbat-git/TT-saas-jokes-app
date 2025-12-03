@@ -7,7 +7,6 @@ use App\Models\Category;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
@@ -36,8 +35,10 @@ class CategoryManagementController extends Controller
 
     /**
      * Store a newly created resource in storage.
+     * @param Request $request
+     * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         try{
             $validated = $request->validate([
@@ -95,8 +96,11 @@ class CategoryManagementController extends Controller
 
     /**
      * Update the specified resource in storage.
+     * @param Request $request
+     * @param Category $category
+     * @return RedirectResponse
      */
-    public function update(Request $request, Category $category)
+    public function update(Request $request, Category $category): RedirectResponse
     {
         try{
             $oldCategory = $category;
