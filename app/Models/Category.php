@@ -58,4 +58,11 @@ class Category extends Model
         return ($this->description->words($words));
     }
 
+    public function jokes()
+    {
+        return $this->belongsToMany(Joke::class)
+            ->using(\App\Models\CategoryJoke::class)
+            ->withTimestamps();
+    }
+
 }

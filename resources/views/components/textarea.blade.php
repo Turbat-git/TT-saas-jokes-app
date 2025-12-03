@@ -8,5 +8,5 @@
                         focus:ring focus:ring-indigo-200
                         rounded-sm shadow-sm',
             'rows' => $rows]) }}
->{{ $message ?? null }}</textarea>
+>{{ $slot ?? $message ?? '' }}</textarea>
 

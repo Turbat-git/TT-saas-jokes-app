@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CategoryManagementController;
 use App\Http\Controllers\Admin\UserManagementController;
+use App\Http\Controllers\JokeController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StaticPageController;
@@ -25,6 +26,11 @@ Route::get('categories/{category}', [GuestCategoryController::class, 'show'])
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])
         ->name('dashboard');
+
+    Route::get('jokes/{joke}/delete', [JokeController::class, 'delete'])
+        ->name('jokes.delete');
+
+    Route::resource('jokes', JokeController::class);
 });
 
 

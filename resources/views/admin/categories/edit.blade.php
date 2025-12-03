@@ -24,7 +24,7 @@
                               id="Title"
                               type="text"
                               placeholder="Category Title"
-                              :value="old('title') ?? $category->title"
+                              :message="old('title', $category->title)"
                               required autofocus
                               autocomplete="title"/>
                 <x-input-error :messages="$errors->get('title')" class="mt-2"/>
@@ -33,7 +33,7 @@
                 <x-textarea name="description"
                               id="Description"
                               placeholder="Category Description"
-                              :value="old('title') ?? $category->description"
+                              :message="old('description') ?? $category->description"
                               required autofocus
                               autocomplete="description"/>
                 <x-input-error :messages="$errors->get('description')" class="mt-2"/>

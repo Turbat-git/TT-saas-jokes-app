@@ -17,6 +17,8 @@ class DatabaseSeeder extends Seeder
             [
                 // When using Spatie Permissions, perform the Role / Permission seeding FIRST
                 UserSeeder::class,
+                JokeSeeder::class,
+                CategorySeeder::class,
                 // Add further seeder classes here
             ]
         );

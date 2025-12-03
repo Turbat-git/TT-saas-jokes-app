@@ -42,6 +42,11 @@
             {{ __('Dashboard') }}
         </x-side-nav-link>
 
+        <x-side-nav-link :href="route('jokes.index')" :active="request()->routeIs('jokes.index')">
+            <i class="fa-solid fa-dashboard group-hover:text-zinc-500"></i>
+            {{ __('Jokes') }}
+        </x-side-nav-link>
+
         <x-side-nav-link :href="route('admin.index')" :active="request()->routeIs('admin.*')">
             <i class="fa-solid fa-user-secret group-hover:text-zinc-500"></i>
             {{ __('Admin Home') }}

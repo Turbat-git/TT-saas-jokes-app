@@ -1,7 +1,7 @@
-<x-admin-layout>
+<x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-white leading-tight">
-            {{ __('Admin Zone') }}
+            {{ __('User Zone') }}
         </h2>
     </x-slot>
 
@@ -9,19 +9,19 @@
 
         <header>
             <h3 class="text-2xl font-bold text-zinc-700">
-                {{__('Categories')}}: {{ __('Delete') }}
+                {{__('Joke')}}: {{ __('Delete') }}
             </h3>
         </header>
 
         <dl class="flex flex-wrap gap-4">
             <dt class="w-1/6">Name</dt>
-            <dd class="grow">{{ $category->title }}</dd>
-            <dt class="w-1/6">Description</dt>
-            <dd class="grow min-w-2/3">{{ $category->description }}</dd>
+            <dd class="grow">{{ $joke->title }}</dd>
+            <dt class="w-1/6">Content</dt>
+            <dd class="grow min-w-2/3">{{ $joke->content }}</dd>
         </dl>
 
         <footer>
-            <form action="{{ route('admin.categories.destroy', $category) }}"
+            <form action="{{ route('jokes.destroy', $joke) }}"
                   method="POST"
                   class="flex gap-4">
 
@@ -29,13 +29,13 @@
                 @method('DELETE')
 
                 <x-primary-link-button
-                    href="{{ route('admin.categories.index') }}"
+                    href="{{ route('jokes.index') }}"
                     class="hover:bg-sky-500 gap-4">
                     <i class="fa-solid fa-list pr-2"></i>
-                    <span>All Categories</span>
+                    <span>All Jokes</span>
                 </x-primary-link-button>
                 <x-primary-link-button
-                    href="{{ route('admin.categories.edit', $category ) }}"
+                    href="{{ route('jokes.edit', $joke ) }}"
                     class="hover:bg-green-500 gap-4">
                     <i class="fa-solid fa-edit pr-2"></i>
                     <span>Edit</span>
@@ -50,4 +50,4 @@
         </footer>
     </section>
 
-</x-admin-layout>
+</x-app-layout>

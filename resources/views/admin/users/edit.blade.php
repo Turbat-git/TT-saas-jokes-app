@@ -29,7 +29,7 @@
                             id="Name"
                             type="text"
                             placeholder="User's Name"
-                            :value="old('name') ?? $user->name"
+                            :message="old('name') ?? $user->name"
                             required autofocus
                             autocomplete="name"/>
                 <x-input-error :messages="$errors->get('name')" class="mt-2"/>
@@ -38,7 +38,7 @@
                 <x-textarea name="email"
                             id="Email"
                             placeholder="User Email"
-                            :value="old('email') ?? $user->email"
+                            :message="old('email') ?? $user->email"
                             required autofocus
                             autocomplete="email"/>
                 <x-input-error :messages="$errors->get('email')" class="mt-2"/>
