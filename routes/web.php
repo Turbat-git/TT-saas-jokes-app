@@ -25,33 +25,28 @@ Route::get('categories/{category}', [GuestCategoryController::class, 'show'])
     ->name('categories.show');
 
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'verified', 'role:client|staff|admin|super-user'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])
         ->name('dashboard');
 
     Route::get('jokes/{joke}/delete', [JokeController::class, 'delete'])
         ->name('jokes.delete');
 
-//    Route::post('jokes/{joke}/update', [JokeController::class, 'update'])
-//        ->name('jokes.update');
-
     Route::resource('jokes', JokeController::class);
 });
 
 
 /* Staff and Admin Routes */
-Route::middleware(['auth', 'verified'])
+Route::middleware(['auth', 'verified', 'role:staff|admin|super-user'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
+
         Route::get('/', [AdminController::class, 'index'])
             ->name('index');
 
         Route::get('categories/{category}/delete', [CategoryManagementController::class, 'delete'])
             ->name('categories.delete');
-
-        Route::get('users/{user}/delete', [UserManagementController::class, 'delete'])
-            ->name('users.delete');
 
         /**
          * Creates the routes:
@@ -64,14 +59,19 @@ Route::middleware(['auth', 'verified'])
          *      admin.categories.destroy
          */
         Route::resource('categories', CategoryManagementController::class);
+
+
+        Route::get('users/{user}/delete', [UserManagementController::class, 'delete'])
+            ->name('users.delete');
         Route::resource('users', UserManagementController::class);
 
-        Route::middleware(['auth', 'verified', 'role:admin'])
+        Route::middleware(['auth', 'verified', 'role:admin|super-user'])
             ->group(function () {
 
                 Route::resource('roles', RoleManagementController::class);
 
-                Route::resource('permissions', PermissionManagementController::class);
+                Route::resource('permissions', PermissionManagementController::class)
+                    ->only(['index','show']);
 
                 Route::post('/roles/{role}/permissions',
                     [RoleManagementController::class, 'givePermission'])

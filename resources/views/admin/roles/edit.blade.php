@@ -37,7 +37,8 @@
 
                 <x-text-input name="name" id="Name"
                               placeholder="{{ __('New role name') }}?"
-                              :value="old('name') ?? $role->name"/>
+                              :value="old('name') ?? $role->name"
+                              @if($isProtected) disabled @endif>/>
 
                 <x-input-error :messages="$errors->get('name')" class="mt-2" rows="10"/>
 

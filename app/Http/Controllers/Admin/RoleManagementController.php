@@ -15,6 +15,13 @@ use Illuminate\Validation\Rule;
 
 class RoleManagementController extends Controller
 {
+    private const PROTECTED_ROLES = [
+        'client',
+        'staff',
+        'admin',
+        'super-user',
+    ];
+
     /**
      * Display a listing of the resource.
      * @return View
@@ -80,9 +87,15 @@ class RoleManagementController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Role $role)
     {
-        //
+        $permissions = Permission::all();
+        $rolePermissions = $role->permissions()->get();
+
+        return \view('admin.roles.show')
+            ->with('role', $role)
+            ->with('permissions', $permissions)
+            ->with('rolePermissions', $rolePermissions);
     }
 
     /**
@@ -95,11 +108,11 @@ class RoleManagementController extends Controller
         $permissions = Permission::all();
         $rolePermissions = $role->permissions()->get();
 
-        return view('admin.roles.edit')
-            ->with('role', $role)
-            ->with('permissions', $permissions)
-            ->with('rolePermissions', $rolePermissions);
+        $isProtected = in_array($role->name, self::PROTECTED_ROLES);
+
+        return view('admin.roles.edit', compact('role', 'permissions', 'rolePermissions', 'isProtected'));
     }
+
 
     /**
      * Update the specified resource in storage.
@@ -109,6 +122,11 @@ class RoleManagementController extends Controller
      */
     public function update(Request $request, Role $role): RedirectResponse
     {
+        if (in_array($role->name, self::PROTECTED_ROLES)) {
+            flash()->warning("You cannot rename a system role.");
+            return back();
+        }
+
         try{
             $request['name'] = Str::of($request['name'])
                 ->kebab()??null;
@@ -149,6 +167,10 @@ class RoleManagementController extends Controller
      */
     public function delete(Role $role): View
     {
+        if (in_array($role->name, self::PROTECTED_ROLES)) {
+            abort(403, "This role cannot be deleted.");
+        }
+
         return \view('admin.roles.delete')
             ->with('role', $role);
     }
@@ -161,6 +183,11 @@ class RoleManagementController extends Controller
      */
     public function destroy(Request $request, Role $role):RedirectResponse
     {
+        if (in_array($role->name, self::PROTECTED_ROLES)) {
+            flash()->error("You cannot delete system roles.");
+            return back();
+        }
+
         try {
             $roleName = $role->name;
 

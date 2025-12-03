@@ -11,41 +11,45 @@ class JokePolicy
     /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(User $user): bool
+    public function viewAny(?User $user): bool
     {
-        return false;
+        return true;
     }
 
-    /**
-     * Determine whether the user can view the model.
-     */
-    public function view(User $user, Joke $joke): bool
+    public function view(?User $user, Joke $joke): bool
     {
-        return false;
+        return true;
     }
 
-    /**
-     * Determine whether the user can create models.
-     */
     public function create(User $user): bool
     {
-        return false;
+        return $user->hasAnyRole(['client','staff','admin','super-user']);
     }
 
-    /**
-     * Determine whether the user can update the model.
-     */
     public function update(User $user, Joke $joke): bool
     {
-        return $user->id === $joke->user_id;
+        if ($user->hasRole('client')) {
+            return $joke->user_id === $user->id;
+        }
+
+        if ($user->hasAnyRole(['staff','admin'])) {
+            return true;
+        }
+
+        return $user->hasRole('super-user');
     }
 
-    /**
-     * Determine whether the user can delete the model.
-     */
     public function delete(User $user, Joke $joke): bool
     {
-        return $user->id === $joke->user_id;
+        if ($user->hasRole('client')) {
+            return $joke->user_id === $user->id;
+        }
+
+        if ($user->hasRole('staff')) {
+            return $joke->user_id === $user->id;
+        }
+
+        return $user->hasAnyRole(['admin','super-user']);
     }
 
     /**

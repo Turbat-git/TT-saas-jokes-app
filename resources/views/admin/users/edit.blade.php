@@ -39,6 +39,21 @@
                             >{{ old('email') ?? $user->email }}</x-textarea>
                 <x-input-error :messages="$errors->get('email')" class="mt-2"/>
 
+                <x-input-label for="roles">Roles</x-input-label>
+                <div class="flex flex-col gap-2">
+                    @foreach($roles as $role)
+                        <label class="flex items-center gap-2">
+                            <input type="checkbox"
+                                   name="roles[]"
+                                   value="{{ $role->id }}"
+                                {{ $user->roles->contains($role->id) ? 'checked' : '' }}>
+                            {{ $role->name }}
+                        </label>
+                    @endforeach
+                </div>
+                <x-input-error :messages="$errors->get('roles')" class="mt-2"/>
+
+
                 <div class="flex">
                     <dt class="w-1/4 font-semibold">Email Verified</dt>
                     <dd class="w-3/4">{!! $user->email_verified_at !!}</dd>

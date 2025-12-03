@@ -19,6 +19,30 @@
                 <i class="fa-solid fa-plus"></i>
                 <span>Add Joke</span>
             </x-primary-link-button>
+
+            <form method="GET" action="{{ route('jokes.index') }}" class="mt-4 mb-6">
+                <input
+                    type="text"
+                    name="search"
+                    value="{{ request('search') }}"
+                    placeholder="Search jokes..."
+                    class="border p-2 rounded w-1/3"
+                >
+
+                <x-primary-button
+                    type="submit"
+                    class="hover:bg-sky-500 text-white flex items-center px-4 py-2"
+                >
+                    Search
+                </x-primary-button>
+
+                @if(request('search'))
+                    <a
+                        href="{{ route('jokes.index') }}"
+                        class="ml-2 text-red-500 underline"
+                    >Clear</a>
+                @endif
+            </form>
         </header>
 
         <table class="table w-full bg-white border">

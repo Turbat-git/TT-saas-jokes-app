@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class PermissionManagementController extends Controller
 {
@@ -24,9 +25,14 @@ class PermissionManagementController extends Controller
 
     /**
      * Display the specified resource.
+     * @param Permission $permission
+     * @return View
      */
-    public function show(string $id)
+    public function show(Permission $permission):View
     {
-        //
+        $roles = Role::all();
+        return \view('admin.permissions.show')
+            ->with('permission', $permission)
+            ->with('roles', $roles);
     }
 }

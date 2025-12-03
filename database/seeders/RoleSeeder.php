@@ -31,7 +31,7 @@ class RoleSeeder extends Seeder
 
         // Define permissions (add all your app permissions here)
         $seedPermissions = [
-            'user-browse','user-read','user-edit', 'user-edit-own','user-add','user-delete','user-delete-own', 'user-register',
+            'user-browse','user-read','user-edit', 'user-edit-own','user-add','user-delete','user-delete-own', 'user-register', 'user-read-own',
 
             'role-browse','role-read','role-edit','role-add','role-delete',
 
@@ -99,7 +99,7 @@ class RoleSeeder extends Seeder
         ];
 
         foreach ($adminPermissions as $key => $permission) {
-            $adminPermissions[$key] = Str::of($permission)->kebab();
+            $adminPermissions[$key] = Str::of($permission)->kebab()->toString();
         }
 
         $roleAdmin->syncPermissions($adminPermissions);
@@ -128,7 +128,7 @@ class RoleSeeder extends Seeder
         ];
 
         foreach ($staffPermissions as $key => $permission) {
-            $staffPermissions[$key] = Str::of($permission)->kebab();
+            $staffPermissions[$key] = Str::of($permission)->kebab()->toString();
         }
 
         $roleStaff->syncPermissions($staffPermissions);
@@ -146,11 +146,11 @@ class RoleSeeder extends Seeder
             'category-browse','category-read',
 
             // Jokes
-            'joke-browse','joke-read','joke-add','joke-edit-own','joke-delete-own',
+            'joke browse','joke read','joke add','joke edit-own','joke delete-own',
         ];
 
         foreach ($clientPermissions as $key => $permission) {
-            $clientPermissions[$key] = Str::of($permission)->kebab();
+            $clientPermissions[$key] = Str::of($permission)->kebab()->toString();
         }
 
         $roleClient->syncPermissions($clientPermissions);
@@ -167,7 +167,7 @@ class RoleSeeder extends Seeder
         ];
 
         foreach ($guestPermissions as $key => $permission) {
-            $guestPermissions[$key] = Str::of($permission)->kebab();
+            $guestPermissions[$key] = Str::of($permission)->kebab()->toString();
         }
 
         $guestClient->syncPermissions($guestPermissions);

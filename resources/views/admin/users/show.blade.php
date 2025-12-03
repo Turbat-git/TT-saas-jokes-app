@@ -29,6 +29,13 @@
                 <dd class="w-3/4">{!! $user->email !!}</dd>
             </div>
 
+            @foreach($roles as $role)
+                <div class="flex">
+                    <dt class="w-1/4 font-semibold">Role</dt>
+                    <dd class="w-3/4">{!! $role->name !!}</dd>
+                </div>
+            @endforeach
+
             <div class="flex">
                 <dt class="w-1/4 font-semibold">Email Verified</dt>
                 <dd class="w-3/4">{!! $user->email_verified_at !!}</dd>

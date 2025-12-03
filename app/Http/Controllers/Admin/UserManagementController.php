@@ -6,13 +6,28 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 use \Illuminate\Http\RedirectResponse;
+use Spatie\Permission\Models\Role;
 
 class UserManagementController extends Controller
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:user-browse|user-read|user-edit|user-add|user-delete',
+                only: ['index', 'show',]),
+            new Middleware('permission:user-add',
+                only: ['create', 'store', 'givePermission']),
+            new Middleware('permission:user-edit',
+                only: ['edit', 'update', 'givePermission']),
+            new Middleware('permission:user-delete',
+                only: ['delete', 'destroy',]),
+        ];
+    }
     /**
      * Display a listing of the resource.
      * @return View
@@ -88,8 +103,13 @@ class UserManagementController extends Controller
      */
     public function show(User $user):View
     {
+        $roles = $user->roles()->get();
+        $permissions = $user->permissions()->get();
+
         return view('admin.users.show')
-            ->with('user', $user);
+            ->with('user', $user)
+            ->with('permissions', $permissions)
+            ->with('roles', $roles);
     }
 
     /**
@@ -99,8 +119,16 @@ class UserManagementController extends Controller
      */
     public function edit(User $user): View
     {
+        $roles = Role::all();
+
+        if (auth()->user()->cannot('user-edit')
+            && auth()->id() !== $user->id) {
+            abort(403);
+        }
+
         return view('admin.users.edit')
-            ->with('user', $user);
+            ->with('user', $user)
+            ->with('roles', $roles);
     }
 
     /**
@@ -123,10 +151,13 @@ class UserManagementController extends Controller
                     'required',
                     'email',
                     Rule::unique('users','email')->ignore($user)
-                ]
+                ],
+                'roles' => 'array',
+                'roles.*' => 'exists:roles,id',
             ]);
 
             $user->update($validated);
+            $user->roles()->sync($request->input('roles', []));
 
         } catch (ValidationException $e) {
             flash()->error('Please fix the errors in the form.',
@@ -149,6 +180,11 @@ class UserManagementController extends Controller
 
     public function delete(User $user):View
     {
+        if (auth()->user()->cannot('user-delete')
+            && auth()->id() !== $user->id) {
+            abort(403);
+        }
+
         return view('admin.users.delete')
             ->with('user', $user);
     }
