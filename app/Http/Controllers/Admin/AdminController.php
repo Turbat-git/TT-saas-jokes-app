@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Joke;
 use App\Models\User;
 use Illuminate\Support\Number;
 use Illuminate\View\View;
@@ -15,10 +16,14 @@ class AdminController extends Controller
     {
         $userCount = User::count();
         $userSuspendedCount = User::where('suspended', 1)->count();
+        $jokesCount = Joke::all()->count();
+        $categoriesCount = Category::all()->count();
 
         return view('admin.index')
             ->with('userCount', Number::format($userCount))
-            ->with('userSuspendedCount', Number::format($userSuspendedCount));
+            ->with('userSuspendedCount', Number::format($userSuspendedCount))
+            ->with('jokesCount', $jokesCount)
+            ->with('categoriesCount', $categoriesCount);
     }
 
     //

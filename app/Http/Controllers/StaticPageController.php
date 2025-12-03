@@ -20,7 +20,10 @@ class StaticPageController extends Controller
 
     public function about(): View
     {
-        return view('static.about');
+        $jokesCount = Joke::all()->count();
+
+        return view('static.about')
+            ->with('jokesCount', $jokesCount);
     }
 
     public function contact(): View

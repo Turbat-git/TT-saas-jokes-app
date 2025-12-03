@@ -24,7 +24,7 @@
 
                     <section class="w-3/4 p-6 flex flex-col justify-center">
                         <p class="text-2xl font-bold text-gray-800 group-hover:text-white mb-1 transition-colors duration-500">
-                            1,234
+                            {{ $jokesCount }}
                         </p>
 
                         <p class="text-gray-600 group-hover:text-white text-sm uppercase tracking-wide transition-colors duration-500">
@@ -44,7 +44,7 @@
 
                     <section class="w-3/4 p-6 flex flex-col justify-center">
                         <p class="text-2xl font-bold text-gray-800 group-hover:text-white mb-1 transition-colors duration-500">
-                            65
+                            {{ $categoriesCount }}
                         </p>
 
                         <p class="text-gray-600 group-hover:text-white text-sm uppercase tracking-wide transition-colors duration-500">
@@ -79,26 +79,6 @@
                 <div class="flex">
                     <header
                         class="w-1/4 bg-zinc-700 text-white  flex items-center justify-center py-6 transition-colors duration-500">
-                        <i class="fa-solid fa-passport text-4xl group-hover:-rotate-12 duration-500 transition-transform"></i>
-                    </header>
-
-                    <section class="w-3/4 p-6 flex flex-col justify-center">
-                        <p class="text-2xl font-bold text-gray-800 group-hover:text-white mb-1 transition-colors duration-500">
-                            674,865
-                        </p>
-
-                        <p class="text-gray-600 group-hover:text-white text-sm uppercase tracking-wide transition-colors duration-500">
-                            {{ __('Passengers') }}
-                        </p>
-                    </section>
-                </div>
-            </article>
-
-            <article
-                class="items-center rounded-lg bg-white shadow hover:shadow-none align-middle hover:bg-zinc-700 transition-colors duration-500 group overflow-hidden border border-zinc-700/75">
-                <div class="flex">
-                    <header
-                        class="w-1/4 bg-zinc-700 text-white  flex items-center justify-center py-6 transition-colors duration-500">
                         <i class="fa-solid fa-user-secret text-4xl group-hover:-rotate-12 duration-500 transition-transform"></i>
                     </header>
 
@@ -109,46 +89,6 @@
 
                         <p class="text-gray-600 group-hover:text-white text-sm uppercase tracking-wide transition-colors duration-500">
                             {{ __('Roles') }}
-                        </p>
-                    </section>
-                </div>
-            </article>
-
-            <article
-                class="items-center rounded-lg bg-white shadow hover:shadow-none align-middle hover:bg-zinc-700 transition-colors duration-500 group overflow-hidden border border-zinc-700/75">
-                <div class="flex">
-                    <header
-                        class="w-1/4 bg-zinc-700 text-white  flex items-center justify-center py-6 transition-colors duration-500">
-                        <i class="fa-solid fa-earth-asia text-4xl group-hover:-rotate-12 duration-500 transition-transform"></i>
-                    </header>
-
-                    <section class="w-3/4 p-6 flex flex-col justify-center">
-                        <p class="text-2xl font-bold text-gray-800 group-hover:text-white mb-1 transition-colors duration-500">
-                            23,567,890
-                        </p>
-
-                        <p class="text-gray-600 group-hover:text-white text-sm uppercase tracking-wide transition-colors duration-500">
-                            {{ __('Unique Visitors') }}
-                        </p>
-                    </section>
-                </div>
-            </article>
-
-            <article
-                class="items-center rounded-lg bg-white shadow hover:shadow-none align-middle hover:bg-zinc-700 transition-colors duration-500 group overflow-hidden border border-zinc-700/75">
-                <div class="flex">
-                    <header
-                        class="w-1/4 bg-zinc-700 text-white  flex items-center justify-center py-6 transition-colors duration-500">
-                        <i class="fa-solid fa-universal-access text-4xl group-hover:-rotate-12 duration-500 transition-transform"></i>
-                    </header>
-
-                    <section class="w-3/4 p-6 flex flex-col justify-center">
-                        <p class="text-2xl font-bold text-gray-800 group-hover:text-white mb-1 transition-colors duration-500">
-                            219
-                        </p>
-
-                        <p class="text-gray-600 group-hover:text-white text-sm uppercase tracking-wide transition-colors duration-500">
-                            {{ __('Logged In') }}
                         </p>
                     </section>
                 </div>

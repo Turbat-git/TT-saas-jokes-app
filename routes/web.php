@@ -28,6 +28,8 @@ Route::get('categories/{category}', [GuestCategoryController::class, 'show'])
 Route::middleware(['auth', 'verified', 'role:client|staff|admin|super-user'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])
         ->name('dashboard');
+    Route::get('/about', [StaticPageController::class, 'about'])
+        ->name('about');
 
     Route::get('jokes/{joke}/delete', [JokeController::class, 'delete'])
         ->name('jokes.delete');
